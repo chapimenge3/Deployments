@@ -36,6 +36,7 @@ That's it for pre-checklist. Now, let's move to the deployment process.
 Create a file named `supervisor_django.conf` in `/etc/supervisor/conf.d/` directory.
 
 You can do it by running
+
 ```bash
 sudo nano /etc/supervisor/conf.d/supervisor_django.conf
 ```
