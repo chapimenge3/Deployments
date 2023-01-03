@@ -33,9 +33,14 @@ That's it for pre-checklist. Now, let's move to the deployment process.
 
 ### 1. Create a Supervisor configuration file
 
-Create a file named `supervisor_django.conf` in `/etc/supervisor/conf.d/` directory. 
+Create a file named `supervisor_django.conf` in `/etc/supervisor/conf.d/` directory.
 
-You can do it by running `sudo nano /etc/supervisor/conf.d/supervisor_django.conf` in your terminal. Paste the following code in the file.
+You can do it by running
+```bash
+sudo nano /etc/supervisor/conf.d/supervisor_django.conf
+```
+
+in your terminal. Paste the following code in the file.
 
 ```ini
 [program:deploy_django]
@@ -57,15 +62,40 @@ Replace `deploy_django` with your Django project name. Replace `/home/ubuntu/dep
 
 ### 2. Create a log directory
 
-Create a directory named `deploy_django` in `/var/log/` directory. You can do it by running `sudo mkdir /var/log/deploy_django` in your terminal.
+Create a directory named `deploy_django` in `/var/log/` directory.
+
+You can do it by running
+
+```bash
+sudo mkdir /var/log/deploy_django
+```
+
+in your terminal.
 
 ### 3. Start Supervisor
 
-Start Supervisor by running `sudo supervisorctl reread` and `sudo supervisorctl update` in your terminal.
+Start Supervisor by running
+
+```bash
+
+sudo supervisorctl reread 
+
+sudo supervisorctl update
+```
+
+in your terminal.
 
 ### 4. Create a Nginx configuration file
 
-Create a file named `nginx_django.conf` in `/etc/nginx/sites-available/` directory. You can do it by running `sudo nano /etc/nginx/sites-available/nginx_django.conf` in your terminal. Paste the following code in the file.
+Create a file named `nginx_django.conf` in `/etc/nginx/sites-available/` directory.
+
+You can do it by running
+
+```bash
+sudo nano /etc/nginx/sites-available/nginx_django.conf
+```
+
+in your terminal. Paste the following code in the file.
 
 ```nginx
 server {
@@ -86,4 +116,57 @@ server {
 
 Replace `example.com` with your domain name. Replace `deploy_django` with your Django project name. Replace `/home/ubuntu/deploy_django` with your Django project directory path.
 
-Run `sudo ln -s /etc/nginx/sites-available/nginx_django.conf /etc/nginx/sites-enabled` in your terminal. It will create a symbolic link of `nginx_django.conf` file in `/etc/nginx/sites-enabled/` directory.
+Run
+
+```bash
+sudo ln -s /etc/nginx/sites-available/nginx_django.conf /etc/nginx/sites-enabled
+```
+
+in your terminal. It will create a symbolic link of `nginx_django.conf` file in `/etc/nginx/sites-enabled/` directory.
+
+After that, run
+
+```bash
+sudo nginx -t
+```
+
+in your terminal. It will check your Nginx configuration file for any error.
+
+If there is no error, run
+
+```bash
+sudo systemctl restart nginx
+```
+
+in your terminal. It will restart Nginx.
+
+By now, you have successfully deployed your Django project. You can check it by visiting your domain name in your browser.
+
+Troubleshooting
+
+If you are getting `502 Bad Gateway` error, you can check your Nginx error log by running
+
+```bash
+sudo tail -f /var/log/nginx/error.log
+```
+
+doing this, you will get the error log in your terminal. You can check it and fix the error.
+
+if the error is `Permission denied`, you can fix it by running
+
+```bash
+sudo chgrp www-data /home/ubuntu/
+chmod g+x /home/ubuntu/
+chmod g+r /home/ubuntu/
+sudo systemctl restart nginx
+```
+
+what this command does is, it gives permission to `www-data` group to access `/home/ubuntu/` directory. After that, it restarts Nginx.
+
+## Conclusion
+
+In this tutorial, we have learned how to deploy a Django project on Ubuntu >=20.04. We have used Gunicorn, Nginx, and Supervisor to deploy our Django project.
+
+If you have any questions, feel free to ask me in my [LinkedIn](https://www.linkedin.com/in/chapimenge/) or [Twitter](https://twitter.com/chapimenge3) account.
+
+Enjoy coding!
